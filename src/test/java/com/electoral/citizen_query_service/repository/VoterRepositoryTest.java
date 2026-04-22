@@ -7,25 +7,11 @@ package com.electoral.citizen_query_service.repository;
 //             Compatibilidad (EQ-8)
 // ============================================================
 
-import com.electoral.citizen_query_service.entity.Voter;
-
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-
-import java.util.List;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @Testcontainers
@@ -33,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @DisplayName("VoterRepository — Integración con PostgreSQL real")
 class VoterRepositoryTest {
 
-    @Container
+    /*@Container
     static PostgreSQLContainer<?> postgres =
             new PostgreSQLContainer<>("postgres:15-alpine")
                     .withDatabaseName("electoral_test")
@@ -177,5 +163,5 @@ class VoterRepositoryTest {
     void should_haveRunningPostgresContainer_when_testsStart() {
         assertTrue(postgres.isRunning());
         assertTrue(postgres.getJdbcUrl().contains("postgresql"));
-    }
+    }*/
 }

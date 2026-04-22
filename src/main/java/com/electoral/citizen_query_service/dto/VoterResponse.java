@@ -10,4 +10,5 @@ public class VoterResponse implements Serializable {
     private String document;
     private String pollingStation;
     private String status;
+    private Boolean hasFines;
 }

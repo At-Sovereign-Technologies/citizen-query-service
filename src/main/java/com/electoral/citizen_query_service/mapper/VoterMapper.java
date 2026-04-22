@@ -10,9 +10,18 @@ public class VoterMapper {
 
     public VoterResponse toResponse(Voter voter) {
         VoterResponse response = new VoterResponse();
+
         response.setDocument(voter.getDocument());
         response.setPollingStation(voter.getPollingStation());
-        response.setStatus(voter.isHasVoted() ? "VOTED" : "NOT_VOTED");
+
+        response.setStatus(
+                Boolean.TRUE.equals(voter.getHasVoted())
+                        ? "VOTED"
+                        : "NOT_VOTED"
+        );
+
+        response.setHasFines(voter.getHasFines());
+
         return response;
     }
 }

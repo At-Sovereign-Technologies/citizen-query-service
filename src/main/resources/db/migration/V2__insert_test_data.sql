@@ -1,4 +1,4 @@
-INSERT INTO voter (document, polling_station, has_voted)
+INSERT INTO voter (document, polling_station, has_voted, has_fines)
 SELECT 
     (10000000 + gs * 13)::text AS document,
 
@@ -12,6 +12,8 @@ SELECT
         ]
     )[floor(random() * 20 + 1)],
 
-    (random() > 0.45)
+    (random() > 0.45),   -- has_voted
+
+    (random() > 0.7)     -- has_fines (30% aprox con multas)
 
 FROM generate_series(1, 10000) gs;

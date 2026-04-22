@@ -10,6 +10,7 @@ import com.electoral.citizen_query_service.entity.Voter;
 import com.electoral.citizen_query_service.exception.ResourceNotFoundException;
 import com.electoral.citizen_query_service.mapper.VoterMapper;
 import com.electoral.citizen_query_service.repository.VoterRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
 
@@ -20,16 +21,29 @@ public class CitizenService {
     private final VoterRepository repository;
     private final RedisCacheAdapter cache;
     private final VoterMapper mapper;
+    private final ObjectMapper objectMapper;
+
     private static final Logger log = LoggerFactory.getLogger(CitizenService.class);
 
     public VoterResponse getVoterInfo(String document) {
 
         String key = "voter:" + document;
 
-        Object cached = cache.get(key);
+        Object cachedObj = cache.get(key);
+
+        VoterResponse cached = null;
+
+        if (cachedObj != null) {
+            try {
+                cached = objectMapper.convertValue(cachedObj, VoterResponse.class);
+            } catch (Exception e) {
+                log.warn("CACHE CONVERSION ERROR - key={} - {}", key, e.getMessage());
+            }
+        }
+
         if (cached != null) {
             log.info("CACHE HIT - document={}", document);
-            return (VoterResponse) cached;
+            return cached;
         }
 
         log.info("CACHE MISS - querying DB - document={}", document);

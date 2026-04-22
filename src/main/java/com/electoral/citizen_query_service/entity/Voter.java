@@ -16,7 +16,8 @@ public class Voter {
 
     @Id
     private String document;
-
     private String pollingStation;
-    private boolean hasVoted;
+    private Boolean hasVoted;
+    private Boolean hasFines;
+    
 }
