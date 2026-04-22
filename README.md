@@ -2,13 +2,13 @@
 
 ## 1. Descripción
 
-Microservicio de consultas del sistema ciudadano encargado de exponer
-información pública de solo lectura, como el puesto de votación y el
-estado del voto.
+El Citizen Query Service es un microservicio de solo lectura encargado
+de exponer información pública del ciudadano, como el puesto de
+votación, estado del voto y si posee multas.
 
-Este servicio sigue un enfoque CQRS (lado de lectura) y está optimizado
-para alto rendimiento mediante Redis como cache, incluyendo mecanismos
-de resiliencia para tolerar fallos del servicio de cache.
+Forma parte del lado de consulta bajo el enfoque CQRS e implementa una
+capa de cache con Redis, incluyendo mecanismos de resiliencia para
+tolerar fallos del servicio de cache.
 
 ------------------------------------------------------------------------
 
@@ -21,6 +21,7 @@ de resiliencia para tolerar fallos del servicio de cache.
 -   PostgreSQL
 -   Redis
 -   Resilience4j (Circuit Breaker)
+-   Flyway
 -   Springdoc OpenAPI (Swagger)
 -   Maven
 
@@ -76,67 +77,78 @@ Estados:
 
 ## 7. Variables de entorno
 
-DB_URL=jdbc:postgresql://localhost:5432/citizen_db DB_USER=citizen_user
+DB_URL=jdbc:postgresql://localhost:5432/citizen_db\
+DB_USER=citizen_user\
 DB_PASSWORD=123456
 
-REDIS_HOST=localhost REDIS_PORT=6379
+REDIS_HOST=localhost\
+REDIS_PORT=6379
 
 PORT=8081
 
 ------------------------------------------------------------------------
 
-## 8. Configuración PostgreSQL
+## 8. Base de datos
 
-CREATE DATABASE citizen_db;
-
-CREATE USER citizen_user WITH PASSWORD '123456';
-
+CREATE DATABASE citizen_db;\
+CREATE USER citizen_user WITH PASSWORD '123456';\
 GRANT ALL PRIVILEGES ON DATABASE citizen_db TO citizen_user;
 
-`\c c`{=tex}itizen_db
-
+`\c c`{=tex}itizen_db\
 GRANT ALL ON SCHEMA public TO citizen_user;
 
 ------------------------------------------------------------------------
 
-## 9. Configuración Redis
+## 9. Migraciones (Flyway)
 
-sudo apt update sudo apt install redis-server
+Ubicación:
 
-sudo systemctl start redis-server sudo systemctl enable redis-server
+src/main/resources/db/migration
 
-redis-cli ping
+Ejemplo:
+
+V1\_\_init.sql\
+V2\_\_seed.sql\
+V3\_\_add_has_fines.sql
 
 ------------------------------------------------------------------------
 
-## 10. Ejecución
+## 10. Redis
 
-export \$(grep -v '\^#' .env \| xargs)
+sudo systemctl start redis-server\
+redis-cli ping
 
+Respuesta esperada: PONG
+
+------------------------------------------------------------------------
+
+## 11. Ejecución
+
+export \$(grep -v '\^#' .env \| xargs)\
 mvn spring-boot:run
 
 ------------------------------------------------------------------------
 
-## 11. Swagger
+## 12. Swagger
 
 http://localhost:8081/swagger-ui.html
 
 ------------------------------------------------------------------------
 
-## 12. Endpoint
+## 13. Endpoint
 
 GET /api/v1/citizen/polling-station?document=1001
 
 ------------------------------------------------------------------------
 
-## 13. Respuesta
+## 14. Respuesta
 
 { "document": "1001", "pollingStation": "Mesa 01 - Bogotá", "status":
-"NOT_VOTED" }
+"NOT_VOTED", "hasFines": true }
 
 ------------------------------------------------------------------------
 
-## 14. Observabilidad
+## 15. Observabilidad
 
 Logging estructurado:
 
@@ -148,13 +160,14 @@ Logging estructurado:
 
 ------------------------------------------------------------------------
 
-## 15. Estado
+## 16. Estado
 
-Servicio funcional con:
+Microservicio funcional, resiliente y listo para integración:
 
--   API REST
--   PostgreSQL
--   Redis
--   Circuit Breaker (Resilience4j)
--   Tolerancia a fallos
+-   API REST operativa
+-   PostgreSQL integrado
+-   Redis con tolerancia a fallos
+-   Circuit Breaker activo
+-   Migraciones controladas con Flyway
+-   Campo adicional hasFines implementado
 -   Documentación Swagger
