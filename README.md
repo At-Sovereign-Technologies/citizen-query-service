@@ -4,7 +4,7 @@
 
 El Citizen Query Service es un microservicio de solo lectura encargado
 de exponer información pública del ciudadano, como el puesto de
-votación, estado del voto y si posee multas.
+votación, estado del voto, si posee multas y si está obligado a votar.
 
 Forma parte del lado de consulta bajo el enfoque CQRS e implementa una
 capa de cache con Redis, incluyendo mecanismos de resiliencia para
@@ -109,7 +109,8 @@ Ejemplo:
 
 V1\_\_init.sql\
 V2\_\_seed.sql\
-V3\_\_add_has_fines.sql
+V3\_\_add_has_fines.sql\
+V4\_\_add_birth_date.sql
 
 ------------------------------------------------------------------------
 
@@ -144,11 +145,27 @@ GET /api/v1/citizen/polling-station?document=1001
 ## 14. Respuesta
 
 { "document": "1001", "pollingStation": "Mesa 01 - Bogotá", "status":
-"NOT_VOTED", "hasFines": true }
+"NOT_VOTED", "hasFines": true, "isMandatory": true }
 
 ------------------------------------------------------------------------
 
-## 15. Observabilidad
+## 15. Lógica de negocio
+
+La obligatoriedad del voto se calcula dinámicamente en función de la
+edad:
+
+-   18--21 → opcional\
+
+-   21--60 → obligatorio\
+
+-   60 → opcional
+
+La edad se deriva de la fecha de nacimiento (birth_date), evitando
+persistir lógica de negocio en la base de datos.
+
+------------------------------------------------------------------------
+
+## 16. Observabilidad
 
 Logging estructurado:
 
@@ -160,7 +177,7 @@ Logging estructurado:
 
 ------------------------------------------------------------------------
 
-## 16. Estado
+## 17. Estado
 
 Microservicio funcional, resiliente y listo para integración:
 
@@ -169,5 +186,6 @@ Microservicio funcional, resiliente y listo para integración:
 -   Redis con tolerancia a fallos
 -   Circuit Breaker activo
 -   Migraciones controladas con Flyway
--   Campo adicional hasFines implementado
+-   Campo hasFines implementado
+-   Cálculo dinámico de obligatoriedad de voto
 -   Documentación Swagger
