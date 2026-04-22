@@ -11,4 +11,5 @@ public class VoterResponse implements Serializable {
     private String pollingStation;
     private String status;
     private Boolean hasFines;
+    private Boolean isMandatory;
 }

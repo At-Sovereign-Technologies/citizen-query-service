@@ -1,16 +1,14 @@
 package com.electoral.citizen_query_service.entity;
 
+import java.time.LocalDate;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @Data
-@Getter
-@Setter
 @NoArgsConstructor
 public class Voter {
 
@@ -19,5 +17,5 @@ public class Voter {
     private String pollingStation;
     private Boolean hasVoted;
     private Boolean hasFines;
-    
+    private LocalDate birthDate;
 }

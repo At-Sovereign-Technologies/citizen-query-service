@@ -1,4 +1,4 @@
-INSERT INTO voter (document, polling_station, has_voted, has_fines)
+INSERT INTO voter (document, polling_station, has_voted, has_fines, birth_date)
 SELECT 
     (10000000 + gs * 13)::text AS document,
 
@@ -14,6 +14,8 @@ SELECT
 
     (random() > 0.45),   -- has_voted
 
-    (random() > 0.7)     -- has_fines (30% aprox con multas)
+    (random() > 0.7),    -- has_fines (~30%)
+
+    CURRENT_DATE - ((18 + floor(random() * 72))::int * INTERVAL '1 year')  -- birth_date (18–90 años)
 
 FROM generate_series(1, 10000) gs;
