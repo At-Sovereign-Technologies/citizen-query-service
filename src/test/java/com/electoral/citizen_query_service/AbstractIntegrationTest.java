@@ -28,5 +28,11 @@ public abstract class AbstractIntegrationTest {
         registry.add("spring.datasource.password", postgreSQLContainer::getPassword);
         registry.add("spring.data.redis.host", redisContainer::getHost);
         registry.add("spring.data.redis.port", redisContainer::getFirstMappedPort);
+        // Exponer variables alternativas usadas en application.properties
+        registry.add("DB_URL", postgreSQLContainer::getJdbcUrl);
+        registry.add("DB_USER", postgreSQLContainer::getUsername);
+        registry.add("DB_PASSWORD", postgreSQLContainer::getPassword);
+        registry.add("REDIS_HOST", redisContainer::getHost);
+        registry.add("REDIS_PORT", redisContainer::getFirstMappedPort);
     }
 }
