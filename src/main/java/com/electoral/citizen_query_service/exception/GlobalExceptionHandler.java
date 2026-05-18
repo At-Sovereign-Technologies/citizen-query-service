@@ -26,9 +26,9 @@ public class GlobalExceptionHandler {
                 .build();
     }
 
-    @ExceptionHandler(ConstraintViolationException.class)
+    @ExceptionHandler({ConstraintViolationException.class, org.springframework.web.method.annotation.HandlerMethodValidationException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleValidation(ConstraintViolationException ex, HttpServletRequest request) {
+    public ErrorResponse handleValidation(Exception ex, HttpServletRequest request) {
         ex.printStackTrace();
         return ErrorResponse.builder()
                 .timestamp(LocalDateTime.now())
@@ -38,6 +38,19 @@ public class GlobalExceptionHandler {
                 .path(request.getRequestURI())
                 .build();
     }
+    @ExceptionHandler(org.springframework.web.bind.MissingServletRequestParameterException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleMissingParam(org.springframework.web.bind.MissingServletRequestParameterException ex, HttpServletRequest request) {
+        ex.printStackTrace();
+        return ErrorResponse.builder()
+                .timestamp(LocalDateTime.now())
+                .status(HttpStatus.BAD_REQUEST.value())
+                .error("BAD_REQUEST")
+                .message(ex.getMessage())
+                .path(request.getRequestURI())
+                .build();
+    }
+
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
