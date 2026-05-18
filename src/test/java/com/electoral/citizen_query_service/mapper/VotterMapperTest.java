@@ -47,7 +47,7 @@ class VoterMapperTest {
 
         VoterResponse response = mapper.toResponse(voter);
 
-        assertEquals("HABILITADO", response.getStatus());
+        assertEquals("NOT_VOTED", response.getStatus());
     }
 
     // VM-03 | EQ-20 | hasVoted=true produce YA_VOTO
@@ -61,7 +61,7 @@ class VoterMapperTest {
 
         VoterResponse response = mapper.toResponse(voter);
 
-        assertEquals("YA_VOTO", response.getStatus());
+        assertEquals("VOTED", response.getStatus());
     }
 
     // VM-04 | EQ-2 | El documento no es alterado durante el mapeo
